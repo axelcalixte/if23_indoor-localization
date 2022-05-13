@@ -32,11 +32,15 @@ def get_acquisitions():
     return acquisitions
 
 
+print("### Scanning for Wi-Fi networks requires admin privileges")
 dict = {}
 # number of acquisitions to get inside the range call
 for i in range(5):
     dict[str(i)] = get_acquisitions()
+    # time to wait before starting a new acquisition
+    # we try to take into account Wi-Fi signal waves variance
     time.sleep(3)
 
+print("### Dumping results in a file")
 with open("if23-feature.json", "w") as file:
     json.dump(dict, file, indent=2)
