@@ -17,9 +17,7 @@ WAITING_TIME = 3
 def get_interface_name():
     """ Gets the system's interface name on a GNU/Linux OS """
 
-    result = subprocess.run(["ls", "/sys/class/net"], stdout=subprocess.PIPE)
-    output = [i for i in result.stdout.decode("utf-8").split("\n") if i != ""]
-    for interface_name in output:
+    for interface_name in os.listdir("/sys/class/net"):
         if wlan_regex.match(interface_name) is not None:
             return interface_name
 
@@ -30,7 +28,7 @@ def get_acquisitions():
 
     # wlan = get_interface_name()
 
-    result = subprocess.run(["sudo", "iw", "dev", get_interface_name(),
+    result = subprocess.run(["iw", "dev", get_interface_name(),
                             "scan"], stdout=subprocess.PIPE)
     output = result.stdout.decode("utf-8").split("\n")
 
