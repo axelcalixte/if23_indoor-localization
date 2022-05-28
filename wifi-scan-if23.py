@@ -15,7 +15,7 @@ WAITING_TIME = 3
 
 
 def get_interface_name():
-    """Gets the system's interface name on a GNU/Linux OS """
+    """Gets the system's interface name on a GNU/Linux OS"""
 
     for interface_name in os.listdir("/sys/class/net"):
         if wlan_regex.match(interface_name) is not None:
@@ -23,7 +23,7 @@ def get_interface_name():
 
 
 def get_acquisitions():
-    """Returns array of dictionary entries, each one corresponding
+    """Returns a list of dictionary entries, each one corresponding
      to an AP
      """
 
@@ -49,7 +49,7 @@ def get_acquisitions():
 
 
 def retrieve_data(dict, iter):
-    """Aggregate data into the dict"""
+    """Agregate data into the dict"""
 
     print(f"_Wi-Fi networks scan n°{iter} (requires admin privileges)_")
     for i in range(1, NB_OF_ACQUISITIONS+1):
@@ -60,12 +60,12 @@ def retrieve_data(dict, iter):
 
 
 def write_to_file(dict, iter):
-    """Writing as json the retrieved data"""
+    """ Writing as json the retrieved data """
 
-    if os.path.exists("./data") is True:
-        with open("./data/output" + str(iter) + ".json", "w") as dump:
+    if os.path.exists("./zone") is True:
+        with open("./zone/position" + str(iter) + ".json", "w") as dump:
             json.dump(dict, dump, indent=2)
-    print("### Dumped results in ./data/output" + str(iter) + ".json")
+    print("### Dumped results in ./zone/position" + str(iter) + ".json")
 
 
 iteration = 1
@@ -79,6 +79,7 @@ while True:
     if test == "end":
         break
     elif test == "retry":
+        # The iw command call can fail sometimes
         pass
     else:
         # We are not quitting
