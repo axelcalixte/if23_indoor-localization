@@ -12,7 +12,8 @@ class RssiDatas:
         #super(RssiDatas, self).__init__()
         self.rssi = []
         self.mac = []
-        self.position_changes = []
+        self.position_changes = [] # acquisition id corresponding to a change of position
+        self.zones = [] # zone id corresponding for each RSSI value
 
         self.file_path = "output/romain/h106.json" #temporary for test
 
@@ -40,28 +41,42 @@ class RssiDatas:
 
 
     def importRssiValues(self, zone_file_path):
-        self.position_changes = [0] # acquisition numbers corresponding to a change of position
-
-        # Opening JSON file
-        f = open(zone_file_path)
-
-        # returns JSON object as a dictionary
-        data = json.load(f)
-
-        #print("number of positions : ",len(data))
-        #print("number of acquisitions (first acquisition) : ",len(data['output4']))
-        #print("number of RSSI detected (first acquisition) : ",len(data['output4'][0]))
-        #print("mac and RSSI (first acquisition) : ",len(data['output4'][0][0]))
-
-        #compute the number of acquisitions (and saving the position changes) :
+        self.position_changes = [0]
         n_acquisition = 0
-        i_position = -1
-        for position in data:
-            i_position += 1
-            n_acquisition += len(data[position])
-            self.position_changes.append(n_acquisition)
+        n_zone = 0
+        zone_changes = [0] # temporary variable corres to a change of zone
 
+        for zone_file in os.listdir(param.path):
+            # Opening JSON file
+            #f = open(zone_file_path)
+            f = open(param.path + zone_file)
+
+            # returns JSON object as a dictionary
+            data = json.load(f)
+
+            #print("number of positions : ",len(data))
+            #print("number of acquisitions (first acquisition) : ",len(data['output4']))
+            #print("number of RSSI detected (first acquisition) : ",len(data['output4'][0]))
+            #print("mac and RSSI (first acquisition) : ",len(data['output4'][0][0]))
+
+            #compute the number of acquisitions (and saving the position changes) :
+            i_position = -1
+            for position in data:
+                i_position += 1
+                n_acquisition += len(data[position])
+                self.position_changes.append(n_acquisition)
+            zone_changes.append(n_acquisition)
+
+        #print(zone_changes)
         #print(self.position_changes)
+
+        #filling self.zone :
+        self.zones = np.zeros(n_acquisition)
+        for zone_id in range(len(zone_changes) - 1):
+            self.zones[zone_changes[zone_id]:zone_changes[zone_id + 1]] = zone_id
+
+        #print(self.zones)
+
         n_mac = len(self.mac)
         #print("number of acquisition : ", n_acquisition)
         #print("number of access points (mac) detected : ", n_mac)
@@ -73,6 +88,7 @@ class RssiDatas:
 
         acquisition_index_for_rssi_array = -1
         i_position = -1
+        #add RSSI value for one zone :
         for position in data:
             i_acquisition = -1
             i_position += 1
@@ -170,3 +186,5 @@ class RssiDatas:
         print(np.shape(self.rssi))
         self.rssi = np.delete(self.rssi, access_point_to_delete, 1)
         print(np.shape(self.rssi))
+        self.zones = np.delete(self.zones, access_point_to_delete)
+        print(self.zones)
