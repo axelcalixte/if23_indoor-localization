@@ -168,5 +168,5 @@ class RssiDatas:
                 #self.rssi = np.delete(self.rssi, access_point, 1)
         print(len(access_point_to_delete), "access point will be deleted")
         print(np.shape(self.rssi))
-        rssi = np.delete(self.rssi, access_point_to_delete, 1)
+        self.rssi = np.delete(self.rssi, access_point_to_delete, 1)
         print(np.shape(self.rssi))
