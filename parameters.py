@@ -1,5 +1,7 @@
 path = "output/romain/" #do not for the / at the end of the path
 rssi_csv_output = "rssi.csv"
+mac_csv_output = "mac.csv"
+zones_csv_output = "zones.csv"
 
 # preparing datas :
 # for removing access points :

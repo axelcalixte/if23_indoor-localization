@@ -15,8 +15,6 @@ class RssiDatas:
         self.position_changes = [] # acquisition id corresponding to a change of position
         self.zones = [] # zone id corresponding for each RSSI value
 
-        self.file_path = "output/romain/h106.json" #temporary for test
-
 
     # list the mac in all zones to create a consistent index in all rssi array
     def listMac(self):
@@ -40,7 +38,7 @@ class RssiDatas:
 
 
 
-    def importRssiValues(self, zone_file_path):
+    def importRssiValues(self):
         self.position_changes = [0]
         n_acquisition = 0
         n_zone = 0
@@ -48,9 +46,7 @@ class RssiDatas:
 
         for zone_file in os.listdir(param.path):
             # Opening JSON file
-            #f = open(zone_file_path)
             f = open(param.path + zone_file)
-
             # returns JSON object as a dictionary
             data = json.load(f)
 
@@ -84,32 +80,35 @@ class RssiDatas:
         #initialize the array with all the rssi values :
         self.rssi = np.zeros([n_acquisition, n_mac])
 
-        #print(data['output4'][1])
-
         acquisition_index_for_rssi_array = -1
-        i_position = -1
-        #add RSSI value for one zone :
-        for position in data:
-            i_acquisition = -1
-            i_position += 1
-            #print("\n",i_position)
-            for acquisition in data[position]:
-                i_acquisition += 1
-                acquisition_index_for_rssi_array += 1
-                n_access_points = len(data[position][i_acquisition])
-                #print("\n",i_acquisition)
-                #print(n_access_points)
-                #print(len(data[position][i_acquisition]))
-                for i_access_point in range(n_access_points):
-                    #print("\n",i_access_point)
-                    i_mac = data[position][i_acquisition][i_access_point]['mac']
-                    #print("mac : ",self.mac)
-                    i_rssi = data[position][i_acquisition][i_access_point]['RSSI']
-                    #print("RSSI : ",m_rssi)
-                    #print(data[position][i_acquisition][i_access_point])
-                    #add the RSSI value in the rssi array :
-                    #print(self.mac.index(i_mac))
-                    self.rssi[acquisition_index_for_rssi_array, self.mac.index(i_mac)] = i_rssi
+        #i_position = -1
+        for zone_file in os.listdir(param.path):
+            # Opening JSON file
+            f = open(param.path + zone_file)
+            # returns JSON object as a dictionary
+            data = json.load(f)
+            #add RSSI value for one zone :
+            for position in data:
+                i_acquisition = -1
+                #i_position += 1
+                #print("\n",i_position)
+                for acquisition in data[position]:
+                    i_acquisition += 1
+                    acquisition_index_for_rssi_array += 1
+                    n_access_points = len(data[position][i_acquisition])
+                    #print("\n",i_acquisition)
+                    #print(n_access_points)
+                    #print(len(data[position][i_acquisition]))
+                    for i_access_point in range(n_access_points):
+                        #print("\n",i_access_point)
+                        i_mac = data[position][i_acquisition][i_access_point]['mac']
+                        #print("mac : ",self.mac)
+                        i_rssi = data[position][i_acquisition][i_access_point]['RSSI']
+                        #print("RSSI : ",m_rssi)
+                        #print(data[position][i_acquisition][i_access_point])
+                        #add the RSSI value in the rssi array :
+                        #print(self.mac.index(i_mac))
+                        self.rssi[acquisition_index_for_rssi_array, self.mac.index(i_mac)] = i_rssi
 
     def correctDataWithinPosition(self):
         # average within a position :
@@ -183,8 +182,27 @@ class RssiDatas:
                 access_point_to_delete.append(access_point)
                 #self.rssi = np.delete(self.rssi, access_point, 1)
         print(len(access_point_to_delete), "access point will be deleted")
-        print(np.shape(self.rssi))
+        #print(np.shape(self.rssi))
         self.rssi = np.delete(self.rssi, access_point_to_delete, 1)
-        print(np.shape(self.rssi))
-        self.zones = np.delete(self.zones, access_point_to_delete)
-        print(self.zones)
+        #print(np.shape(self.rssi))
+        self.mac = np.delete(self.mac, access_point_to_delete)
+        #print(self.mac)
+
+    def exportDatas(self):
+        # export RSSI values
+        # convert array into dataframe
+        DF = pd.DataFrame(self.rssi)
+        # save the dataframe as a csv file
+        DF.to_csv(param.rssi_csv_output)
+
+        # export mac values
+        # convert array into dataframe
+        DF = pd.DataFrame(self.mac)
+        # save the dataframe as a csv file
+        DF.to_csv(param.mac_csv_output)
+
+        # export zones id values
+        # convert array into dataframe
+        DF = pd.DataFrame(self.zones)
+        # save the dataframe as a csv file
+        DF.to_csv(param.zones_csv_output)
