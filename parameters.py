@@ -13,4 +13,5 @@ zone_average_threshold = 0.7 # in a zone between the positions
 
 # Machine learning :
 test_split_ratio = 0.2
-learningRate = 1e-5 # between 0 and 1
+learningRate = 5e-5 # between 0 and 1
+epochs = 1500
