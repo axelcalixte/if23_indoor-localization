@@ -10,3 +10,6 @@ ap_ignoring_threshold = 0.1 # 0 - 1 ; minimum occurence average that an access p
 #threshold (0 - 1) to average when missing RSSI :
 acquisition_average_threshold = 0.8 # in an acquisition within a certain position
 zone_average_threshold = 0.7 # in a zone between the positions
+
+# Machine learning :
+test_split_ratio = 0.2
