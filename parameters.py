@@ -16,3 +16,5 @@ test_split_ratio = 0.2
 learningRate = 1e-4 # between 0 and 1
 epochs = 1000
 dropout = 0.2
+
+plot_saving_location = "plots/"
