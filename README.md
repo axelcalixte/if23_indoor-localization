@@ -18,6 +18,10 @@ An example is available in a Jupyter Notebook `processDatas.ipynb`
 - `zones.csv` processed zone ids associated to `rssi.csv`
 - `rawRSSI.csv` non-processed RSSI values, exported in the Jupyter Notebook
 
+## Machine learning
+
+See the Jupyter Notebook `modelCreation.ipynb`
+
 Authors : Axel CALIXTE, Romain STEVENS, Romain THOMAS
 
 2022
