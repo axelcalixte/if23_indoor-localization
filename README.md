@@ -4,8 +4,8 @@ Python application trained to localize a computer in several rooms in the UTT.
 
 ## Scan the RSSI :
 
-1. wifi-scan-if23.py : scan the wifi networks and save them in json
-2. format-bdd-if23.py : combine the datas in one json file from wifi-scan-if23.py
+1. `wifi-scan-if23.py` : scan the wifi networks and save them in json
+2. `format-bdd-if23.py` : combine the datas in one json file from wifi-scan-if23.py
 
 ## Data imports and pre-processing :
 
